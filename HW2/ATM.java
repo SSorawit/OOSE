@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ATM implements ATMAction{
@@ -12,21 +11,21 @@ public class ATM implements ATMAction{
         ATM atm = new ATM();
 
         // สร้าง Manager
-        System.out.println("Create the manager[Y/N]: ");
+        System.out.print("Create the manager[Y/N]: ");
         String create = scanner.nextLine();
         if(create.equalsIgnoreCase("y")){
             isManagerCreated = true;
-            System.out.println("Enter Manager Name: ");
+            System.out.print("Enter Manager Name: ");
             String name = scanner.nextLine();
-            System.out.println("Enter Manager Surname: ");
+            System.out.print("Enter Manager Surname: ");
             String surname = scanner.nextLine();
-            System.out.println("Enter Manager ID Card: ");
+            System.out.print("Enter Manager ID Card: ");
             String managerIdCard = scanner.nextLine();
-            System.out.println("Enter Manager Gender [Male/Female]: ");
+            System.out.print("Enter Manager Gender [Male/Female]: ");
             String managerGender = scanner.nextLine();
-            System.out.println("Enter Manager Account ID: ");
+            System.out.print("Enter Manager Account ID: ");
             String managerAccountId = scanner.nextLine();
-            System.out.println("Enter Manager Account Password: ");
+            System.out.print("Enter Manager Account Password: ");
             String managerPassword = scanner.nextLine();
 
             Manager manager = new Manager(managerIdCard, name, surname, managerGender, managerAccountId, managerPassword);
@@ -35,31 +34,31 @@ public class ATM implements ATMAction{
 
             // ล๊อกอิน Manager
             System.out.println("Manager Login to use ATM");
-            System.out.println("Manager ID: ");
+            System.out.print("Manager ID: ");
             String loginId = scanner.nextLine();
-            System.out.println("Account Password: ");
+            System.out.print("Account Password: ");
             String loginPass = scanner.nextLine();
             if(manager.login(loginId, loginPass)){
                 System.out.println("Login successful!");
                 //สร้างบัญชีธนาคาร
-                System.out.println("Step 1. Enter the number of accounts to create: ");
+                System.out.print("Step 1. Enter the number of accounts to create: ");
                 int accountCount = scanner.nextInt();
                 scanner.nextLine();
                 for(int i=1;i <= accountCount; i++){
                     System.out.println("Create account #" +i);
-                    System.out.println("Name: ");
+                    System.out.print("Name: ");
                     String accname = scanner.nextLine();
-                    System.out.println("Surname: ");
+                    System.out.print("Surname: ");
                     String surnameAcc = scanner.nextLine();
-                    System.out.println("ID Card: ");
+                    System.out.print("ID Card: ");
                     String idCard = scanner.nextLine();
-                    System.out.println("Gender [Male/Female]: ");
+                    System.out.print("Gender [Male/Female]: ");
                     String gender = scanner.nextLine();
-                    System.out.println("Account ID: ");
+                    System.out.print("Account ID: ");
                     String accountId = scanner.nextLine();
-                    System.out.println("Password: ");
+                    System.out.print("Password: ");
                     String password = scanner.nextLine();
-                    System.out.println("Initial Balance: ");
+                    System.out.print("Initial Balance: ");
                     int balance = scanner.nextInt();
                     scanner.nextLine();
 
@@ -71,9 +70,9 @@ public class ATM implements ATMAction{
                 boolean running = true;
                 while(running) {
                     System.out.println("please login to an account to use ATM services.");
-                    System.out.println("Enter Account ID: ");
+                    System.out.print("Enter Account ID: ");
                     String accountId = scanner.nextLine();
-                    System.out.println("Enter Account Password: ");
+                    System.out.print("Enter Account Password: ");
                     String accountPassword = scanner.nextLine();
                     
                     BankAccount loggedIdAccount = atm.findAccountById(accountId);
@@ -100,23 +99,23 @@ public class ATM implements ATMAction{
                                     atm.checkable(loggedIdAccount);
                                     break;
                                 case 2:
-                                    System.out.println("Enter amount to deposit: ");
+                                    System.out.print("Enter amount to deposit: ");
                                     int depositAmount = scanner.nextInt();
                                     scanner.nextLine();
                                     System.out.println("Depositing money...");
                                     atm.depositable(loggedIdAccount, depositAmount);
                                     break;
                                 case 3:
-                                    System.out.println("Enter amount to withdraw: ");
+                                    System.out.print("Enter amount to withdraw: ");
                                     int withdrawAmount = scanner.nextInt();
                                     scanner.nextLine();
                                     System.out.println("Withdrawing money...");
                                     atm.withdrawable(loggedIdAccount, withdrawAmount);
                                     break;
                                 case 4:
-                                    System.out.println("Enter recipient Account ID: ");
+                                    System.out.print("Enter recipient Account ID: ");
                                     String recipientId = scanner.nextLine();
-                                    System.out.println("Enter amount to transfer: ");
+                                    System.out.print("Enter amount to transfer: ");
                                     int transferAmount = scanner.nextInt();
                                     scanner.nextLine();
 
@@ -177,7 +176,7 @@ public class ATM implements ATMAction{
             System.out.println("No account is currently logged in.");
             return false;
         }
-        System.out.println("Account: " + loggedInAccount.getAccountName() + ", Balance" + loggedInAccount.getBalance());
+        System.out.println("Account: " + loggedInAccount.getAccountName() + ", Balance : " + loggedInAccount.getBalance());
         return true;
     }
 
