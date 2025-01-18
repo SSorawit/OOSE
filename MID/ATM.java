@@ -96,6 +96,7 @@ public class ATM implements ATMAction {
                             System.out.println("3. Withdraw Money");
                             System.out.println("4. Tranfer Money");
                             System.out.println("5. Exit");
+        
 
                             System.out.print("Choose an option: ");
                             int choice = scanner.nextInt();
@@ -153,14 +154,29 @@ public class ATM implements ATMAction {
                                 case 4:
                                     System.out.print("Enter recipient Account ID: ");
                                     String recipientId = scanner.nextLine();
-                                    System.out.print("Enter amount to transfer: ");
-                                    int transferAmount = scanner.nextInt();
-                                    scanner.nextLine();
+                                    BankAccount recipientAccount = atm.findAccountById(recipientId);
 
-                                    BankAccount recipieAccount = atm.findAccountById(recipientId);
-                                    if (recipieAccount != null) {
-                                        System.out.println("Transferring money...");
-                                        atm.transferable(loggedIdAccount, recipieAccount, transferAmount);
+                                    if (recipientAccount != null) {
+                                        System.out.println("Choose transfer type:");
+                                        System.out.println("1. Transfer in THB");
+                                        System.out.println("2. Transfer in BTC");
+                                        System.out.print("Enter your choice: ");
+                                        int transferType = scanner.nextInt();
+                                        scanner.nextLine();
+
+                                        if (transferType == 1) { // โอนเป็น บาท
+                                            System.out.print("Enter amount to transfer (THB): ");
+                                            double transferAmount = scanner.nextDouble();
+                                            scanner.nextLine();
+                                            atm.transferable(loggedIdAccount, recipientAccount, transferAmount, false);
+                                        } else if (transferType == 2) { // โอนเป็น BTC
+                                            System.out.print("Enter amount to transfer (BTC): ");
+                                            double transferBTC = scanner.nextDouble();
+                                            scanner.nextLine();
+                                            atm.transferable(loggedIdAccount, recipientAccount, transferBTC, true);
+                                        } else {
+                                            System.out.println("Invalid choice.");
+                                        }
                                     } else {
                                         System.out.println("Recipient account not found. Transfer failed.");
                                     }
@@ -289,23 +305,38 @@ public class ATM implements ATMAction {
 
     // การโอนเงิน
     @Override
-    public boolean transferable(BankAccount loggedInAccount, BankAccount recipient, double amount) {
-        if (loggedInAccount == null) {
-            System.out.println("No account is currently logged in.");
+    public boolean transferable(BankAccount loggedInAccount, BankAccount recipient, double amount, boolean isBTC) {
+        if (loggedInAccount == null || recipient == null) {
+            System.out.println("Sender or recipient account not found.");
             return false;
         }
-        if (recipient == null) {
-            System.out.println("Recipient account not found.");
+
+        if (isBTC) { // โอนเป็น BTC
+            if (rate <= 0) {
+                System.out.println("Exchange rate not set. Unable to transfer BTC.");
+                return false;
+            }
+            double convertedAmount = amount * rate; // แปลง BTC เป็น บาท
+            if (loggedInAccount.getBalance() >= convertedAmount) {
+                System.out.println("Transferring " + amount + " BTC (" + convertedAmount + " THB) to "
+                        + recipient.getAccountName() + "...");
+                loggedInAccount.withdraw(convertedAmount);
+                recipient.deposit(convertedAmount);
+                return true;
+            } else {
+                System.out.println("Transfer failed. Insufficient funds.");
+                return false;
+            }
+        } else { // โอนเป็น บาท
+            if (amount > 0 && loggedInAccount.getBalance() >= amount) {
+                System.out.println("Transferring " + amount + " THB to " + recipient.getAccountName() + "...");
+                loggedInAccount.withdraw(amount);
+                recipient.deposit(amount);
+                return true;
+            }
+            System.out.println("Transfer failed. Insufficient funds or invalid amount.");
             return false;
         }
-        if (amount > 0 && loggedInAccount.getBalance() >= amount) {
-            loggedInAccount.withdraw(amount);
-            recipient.deposit(amount);
-            System.out.println("Transfer successful. Transferred " + amount + " to " + recipient.getAccountName());
-            return true;
-        }
-        System.out.println("Transfer failed. Insufficient funds or invalid amount.");
-        return false;
     }
 
     @Override
